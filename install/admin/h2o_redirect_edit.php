@@ -1,0 +1,1 @@
+<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/h2o_redirect_edit.php");?>
