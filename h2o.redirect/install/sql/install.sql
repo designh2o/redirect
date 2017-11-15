@@ -3,5 +3,6 @@ CREATE TABLE h2o_redirect (
 	ACTIVE char(1) not null DEFAULT 'Y',
 	REDIRECT_FROM text  NULL,
 	REDIRECT_TO text  NULL,
+	IS_REGEXP CHAR(1) NOT NULL DEFAULT 'N',
 	primary key (ID)
 );

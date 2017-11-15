@@ -75,9 +75,11 @@ Class CHORedirect
 				default:
 					$status_string = "301 Moved permanently";
 			}
+			//сначала ищем в обычных редиректах
 			$db_redirect = h2o\Redirect\RedirectTable::getList(array(
 				'filter' => array(
 					"ACTIVE" => "Y",
+					"IS_REGEXP" => "N",
 					array(
 						"LOGIC" => "OR",
 						array("REDIRECT_FROM" => urldecode($cur_page)),
@@ -88,6 +90,28 @@ Class CHORedirect
 			if($arRedirect = $db_redirect->fetch()){
 				if($arRedirect['REDIRECT_TO'] != ""){
 					LocalRedirect($arRedirect['REDIRECT_TO'], false, $status_string);
+				}
+			}else{
+				//пробуем найти в регулярках
+				$db_redirect = h2o\Redirect\RedirectTable::getList(array(
+					'filter' => array(
+						"ACTIVE" => "Y",
+						"IS_REGEXP" => "Y"
+					)
+				));
+				while($arRedirect = $db_redirect->fetch()){
+					if($arRedirect['REDIRECT_TO'] != "") {
+						if (preg_match($arRedirect['REDIRECT_FROM'], urldecode($cur_page))) {
+							LocalRedirect(preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page)),
+								false, $status_string);
+							break;
+						}
+						if (preg_match($arRedirect['REDIRECT_FROM'], urldecode($cur_page_index))) {
+							LocalRedirect(preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page_index)),
+								false, $status_string);
+							break;
+						}
+					}
 				}
 			}
 

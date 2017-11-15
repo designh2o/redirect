@@ -14,6 +14,7 @@ Loc::loadMessages(__FILE__);
  * <li> ACTIVE bool optional default 'Y'
  * <li> REDIRECT_FROM string optional
  * <li> REDIRECT_TO string optional
+ * <li> IS_REGEXP bool optional default 'N'
  * </ul>
  *
  * @package Bitrix\Redirect
@@ -61,6 +62,12 @@ class RedirectTable extends Entity\DataManager
 				'title' => Loc::getMessage('REDIRECT_ENTITY_REDIRECT_TO_FIELD'),
 				'editable' => true
 			),
+			'IS_REGEXP' => array(
+				'data_type' => 'boolean',
+				'values' => array('N', 'Y'),
+				'title' => Loc::getMessage('REDIRECT_ENTITY_IS_REGEXP_FIELD'),
+				'editable' => true
+			)
 		);
 	}
 }
