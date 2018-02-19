@@ -82,8 +82,8 @@ Class CHORedirect
 					"IS_REGEXP" => "N",
 					array(
 						"LOGIC" => "OR",
-						array("REDIRECT_FROM" => urldecode($cur_page)),
-						array("REDIRECT_FROM" => urldecode($cur_page_index)),
+						array("=REDIRECT_FROM" => urldecode($cur_page)),
+						array("=REDIRECT_FROM" => urldecode($cur_page_index)),
 					)
 				)
 			));
