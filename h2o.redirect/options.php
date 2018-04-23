@@ -48,6 +48,11 @@ if ((!empty($save) || !empty($restore)) && $request->isPost() && check_bitrix_se
 			"status",
 			$request->getPost('status')
 		);
+		Option::set(
+			ADMIN_MODULE_NAME,
+			"to_track_redirect",
+			$request->getPost('to_track_redirect') == 'Y' ? "Y" : "N"
+		);
 
 		CAdminMessage::showMessage(array(
 			"MESSAGE" => Loc::getMessage("H2O_OPTIONS_SAVED"),
@@ -77,7 +82,18 @@ $tabControl->begin();
 			</select>
 		</td>
 	</tr>
-
+	<tr>
+		<td width="40%">
+			<label for="to_track_redirect"><?= Loc::getMessage("H2O_TO_TRACK_REDIRECT") ?>:</label>
+		<td width="60%">
+			<input
+					type="checkbox"
+					id="to_track_redirect"
+					name="to_track_redirect"
+					<?= (Option::get(ADMIN_MODULE_NAME, "to_track_redirect", 'Y') == 'Y') ? 'checked' : '' ?>
+					value="Y">
+		</td>
+	</tr>
 	<?php
 	$tabControl->buttons();
 	?>

@@ -1,5 +1,6 @@
 <?
 use Bitrix\Main\Loader;
+use Bitrix\Main\Config\Option;
 
 // подключим все необходимые файлы:
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php"); // первый общий пролог
@@ -118,9 +119,10 @@ $aMenu = array(
     "ICON"=>"btn_list",
   )
 );
-
+$toTrackRedirect = false;
 if($ID>0)
 {
+	$toTrackRedirect = Option::get('h2o.redirect', "to_track_redirect", 'Y') == 'Y';
   $aMenu[] = array("SEPARATOR"=>"Y");
   $aMenu[] = array(
     "TEXT"=>GetMessage("H2O_REDIRECT_ADD"),
@@ -180,6 +182,9 @@ foreach($arMap as $code => $field):
 	if($ID == 0 && !$field['editable']){
 		continue;
 	}
+	if(!$toTrackRedirect && $code == 'COUNT_REDIRECT'){
+		continue;
+	}
 ?>
   <tr>
     <td width="40%">
@@ -206,7 +211,7 @@ foreach($arMap as $code => $field):
 					}elseif($field['type_field'] == 'user'){
 						print \h2o\Redirect\H2oRedirectTools::ShowUserField($code,$field,array("VALUE" => $redirect_element[$code]));
 					}else{
-						?><input type="text" name="<?=$code?>" value="<?=$redirect_element[$code]?>"/>	<?
+						?><input type="text" name="<?=$code?>" value="<?=$redirect_element[$code]?>" style="width: 100%;" />	<?
 					}
 					break;
 			}?>
@@ -225,7 +230,7 @@ foreach($arMap as $code => $field):
 		</td>
   </tr>
 <?endforeach;?>
-  
+
 <?
 
 // завершение формы - вывод кнопок сохранения изменений

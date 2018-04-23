@@ -164,12 +164,15 @@ $myData = new CAdminResult($myData, $listTableId);
 $myData->NavStart();
 
 $adminList->NavText($myData->GetNavPrint(GetMessage("H2O_REDIRECT_ADMIN_NAV")));
-
+$toTrackRedirect = Bitrix\Main\Config\Option::get('h2o.redirect', "to_track_redirect", 'Y') == 'Y';
 $cols = \h2o\Redirect\RedirectTable::getMap();
 $colHeaders = array();
 foreach ($cols as $colId => $col)
 {
 	if($col['hidden']){
+		continue;
+	}
+	if(!$toTrackRedirect && $colId == 'COUNT_REDIRECT'){
 		continue;
 	}
 	$colHeaders[] = array(
@@ -190,6 +193,9 @@ while ($arRes = $myData->GetNext())
 
 	if (in_array("ACTIVE", $visibleHeaderColumns)){
 		$row->AddViewField("ACTIVE", $arRes['ACTIVE'] == 'Y'?GetMessage("H2O_REDIRECT_YES"):GetMessage("H2O_REDIRECT_NO"));
+	}
+	if (in_array("IS_REGEXP", $visibleHeaderColumns)){
+		$row->AddViewField("IS_REGEXP", $arRes['IS_REGEXP'] == 'Y'?GetMessage("H2O_REDIRECT_YES"):GetMessage("H2O_REDIRECT_NO"));
 	}
 	//$el_edit_url = htmlspecialcharsbx(\h2o\Redirect\H2oRedirectTools::GetAdminElementEditLink($arRes["ID"]));
 	/*$arActions[] = array(

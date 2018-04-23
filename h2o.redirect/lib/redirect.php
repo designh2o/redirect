@@ -67,6 +67,11 @@ class RedirectTable extends Entity\DataManager
 				'values' => array('N', 'Y'),
 				'title' => Loc::getMessage('REDIRECT_ENTITY_IS_REGEXP_FIELD'),
 				'editable' => true
+			),
+			'COUNT_REDIRECT' => array(
+				'data_type' => 'integer',
+				'title' => Loc::getMessage('REDIRECT_ENTITY_COUNT_REDIRECT'),
+				'editable' => false
 			)
 		);
 	}

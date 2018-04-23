@@ -12,7 +12,12 @@ IncludeModuleLangFile(__FILE__);
 
 Class CHORedirect
 {
-	function OnBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
+	/**
+	 * Метод обработчик события создания меню в админке
+	 * @param $aGlobalMenu
+	 * @param $aModuleMenu
+	 */
+	public static function OnBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 	{
 		if($GLOBALS['APPLICATION']->GetGroupRight("main") < "R")
 			return;
@@ -59,22 +64,14 @@ Class CHORedirect
 		$aModuleMenu[] = $aMenu;
 	}
 
-	function onRedirect(){
+	/**
+	 * Метод обработчик события OnBeforeProlog
+	 */
+	public static function onRedirect(){
 		global $APPLICATION;
 		$cur_page = $APPLICATION->GetCurPageParam("",array(),false);
 		$cur_page_index = $APPLICATION->GetCurPageParam("", array(), true);
 		if(Bitrix\Main\Loader::includeModule('h2o.redirect')){
-			$status = Option::get('h2o.redirect', "status", '301');
-			switch($status){
-				case 301:
-					$status_string = "301 Moved permanently";
-					break;
-				case 302:
-					$status_string = "302 Found";
-					break;
-				default:
-					$status_string = "301 Moved permanently";
-			}
 			//сначала ищем в обычных редиректах
 			$db_redirect = h2o\Redirect\RedirectTable::getList(array(
 				'filter' => array(
@@ -89,7 +86,7 @@ Class CHORedirect
 			));
 			if($arRedirect = $db_redirect->fetch()){
 				if($arRedirect['REDIRECT_TO'] != ""){
-					LocalRedirect($arRedirect['REDIRECT_TO'], false, $status_string);
+					self::doRedirect($arRedirect['REDIRECT_TO'], $arRedirect);
 				}
 			}else{
 				//пробуем найти в регулярках
@@ -102,20 +99,50 @@ Class CHORedirect
 				while($arRedirect = $db_redirect->fetch()){
 					if($arRedirect['REDIRECT_TO'] != "") {
 						if (preg_match($arRedirect['REDIRECT_FROM'], urldecode($cur_page))) {
-							LocalRedirect(preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page)),
-								false, $status_string);
+							self::doRedirect(
+								preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page)),
+								$arRedirect
+							);
 							break;
 						}
 						if (preg_match($arRedirect['REDIRECT_FROM'], urldecode($cur_page_index))) {
-							LocalRedirect(preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page_index)),
-								false, $status_string);
+							self::doRedirect(
+								preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], urldecode($cur_page_index)),
+								$arRedirect
+							);
 							break;
 						}
 					}
 				}
 			}
-
 		}
+	}
+
+	/**
+	 * Выполнение редиректа
+	 *
+	 * @param string      $url
+	 * @param bool|array  $arRedirect
+	 */
+	protected static function doRedirect($url, $arRedirect = false){
+		$status = Option::get('h2o.redirect', "status", '301'); //Статус редиректа
+		$toTrackRedirect = Option::get('h2o.redirect', "to_track_redirect", 'Y'); //Вести статистику по редиректам
+		switch($status){
+			case 301:
+				$status_string = "301 Moved permanently";
+				break;
+			case 302:
+				$status_string = "302 Found";
+				break;
+			default:
+				$status_string = "301 Moved permanently";
+		}
+		if($toTrackRedirect == 'Y' && $arRedirect){
+			\h2o\Redirect\RedirectTable::update($arRedirect['ID'], array(
+				"COUNT_REDIRECT" => $arRedirect['COUNT_REDIRECT'] + 1
+			));
+		}
+		LocalRedirect($url, false, $status_string);
 	}
 }
 ?>
