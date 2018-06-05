@@ -8,6 +8,7 @@ Loader::registerAutoLoadClasses('h2o.redirect', array(
     // no thanks, bitrix, we better will use psr-4 than your class names convention
     'h2o\Redirect\RedirectTable' => 'lib/redirect.php',
 ));
+
 IncludeModuleLangFile(__FILE__);
 
 Class CHORedirect
@@ -28,8 +29,8 @@ Class CHORedirect
 			"parent_menu" => "global_menu_content",
 			"section" => $MODULE_ID,
 			"sort" => 50,
-			"text" => GetMessage('H2O_REDIRECT_TITLE'),
-			"title" => GetMessage('H2O_REDIRECT_TITLE'),
+			"text" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage('H2O_REDIRECT_TITLE')),
+			"title" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage('H2O_REDIRECT_TITLE')),
 //			"url" => "partner_modules.php?module=".$MODULE_ID,
 			"icon" => "",
 			"page_icon" => "",
@@ -43,12 +44,9 @@ Class CHORedirect
 			if ($dir = opendir($path))
 			{
 				$arFiles = array("h2o_redirect_list.php");
-
-
-				
 				sort($arFiles);
 				$arTitles = array(
-					'h2o_redirect_list.php' => GetMessage("H2O_REDIRECT_LIST"),
+					'h2o_redirect_list.php' => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_LIST")),
 					
 				);
 
@@ -82,7 +80,10 @@ Class CHORedirect
 						array("=REDIRECT_FROM" => urldecode($cur_page)),
 						array("=REDIRECT_FROM" => urldecode($cur_page_index)),
 					)
-				)
+				),'cache'  => [
+                    'ttl'         => 36000000,
+                    'cache_joins' => true,
+                ]
 			));
 			if($arRedirect = $db_redirect->fetch()){
 				if($arRedirect['REDIRECT_TO'] != ""){
@@ -94,7 +95,10 @@ Class CHORedirect
 					'filter' => array(
 						"ACTIVE" => "Y",
 						"IS_REGEXP" => "Y"
-					)
+					),'cache'  => [
+                        'ttl'         => 36000000,
+                        'cache_joins' => true,
+                    ]
 				));
 				while($arRedirect = $db_redirect->fetch()){
 					if($arRedirect['REDIRECT_TO'] != "") {

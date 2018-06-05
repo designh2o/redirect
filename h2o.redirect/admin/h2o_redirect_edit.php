@@ -14,7 +14,7 @@ IncludeModuleLangFile(__FILE__);
 global $DB;
 // сформируем список закладок
 $aTabs = array(
-  array("DIV" => "edit1", "TAB" => GetMessage("H2O_REDIRECT_TAB_MAIN"), "ICON"=>"main_user_edit", "TITLE"=>GetMessage("H2O_REDIRECT_TAB_MAIN")),
+  array("DIV" => "edit1", "TAB" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_TAB_MAIN")), "ICON"=>"main_user_edit", "TITLE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_TAB_MAIN"))),
   
 );
 $tabControl = new CAdminTabControl("tabControl", $aTabs);
@@ -76,7 +76,7 @@ if(
   {
     // если в процессе сохранения возникли ошибки - получаем текст ошибки и меняем вышеопределённые переменные
     if($e = $result->getErrorMessages())
-      $message = new CAdminMessage(GetMessage("H2O_REDIRECT_ERROR").implode("; ",$e));
+      $message = new CAdminMessage(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ERROR")).implode("; ",$e));
     $bVarsFromForm = true;
   }
 }
@@ -105,7 +105,7 @@ if($bVarsFromForm)
 // ******************************************************************** //
 
 // установим заголовок страницы
-$APPLICATION->SetTitle(($ID>0? GetMessage("H2O_REDIRECT_EDIT_TITLE").$ID : GetMessage("H2O_REDIRECT_ADD_TITLE")));
+$APPLICATION->SetTitle(($ID>0? \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_EDIT_TITLE")).$ID : \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD_TITLE"))));
 
 // не забудем разделить подготовку данных и вывод
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
@@ -113,8 +113,8 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_aft
 // конфигурация административного меню
 $aMenu = array(
   array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_LIST"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_LIST_TITLE"),
+    "TEXT"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_LIST")),
+    "TITLE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_LIST_TITLE")),
     "LINK"=>"h2o_redirect_list.php?lang=".LANG,
     "ICON"=>"btn_list",
   )
@@ -125,15 +125,15 @@ if($ID>0)
 	$toTrackRedirect = Option::get('h2o.redirect', "to_track_redirect", 'Y') == 'Y';
   $aMenu[] = array("SEPARATOR"=>"Y");
   $aMenu[] = array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_ADD"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_ADD"),
+    "TEXT"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD")),
+    "TITLE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD")),
     "LINK"=>"h2o_redirect_edit.php?lang=".LANG,
     "ICON"=>"btn_new",
   );
   $aMenu[] = array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_DELETE"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_DELETE"),
-    "LINK"=>"javascript:if(confirm('".GetMessage("H2O_REDIRECT_DELETE_CONF")."'))window.location='h2o_redirect_list.php?ID=".$ID."&action=delete&lang=".LANG."&".bitrix_sessid_get()."';",
+    "TEXT"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE")),
+    "TITLE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE")),
+    "LINK"=>"javascript:if(confirm('".\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE_CONF"))."'))window.location='h2o_redirect_list.php?ID=".$ID."&action=delete&lang=".LANG."&".bitrix_sessid_get()."';",
     "ICON"=>"btn_delete",
   );
   
@@ -149,7 +149,7 @@ $context->Show();
 <?
 // если есть сообщения об ошибках или об успешном сохранении - выведем их.
 if($_REQUEST["mess"] == "ok" && $ID>0)
-  CAdminMessage::ShowMessage(array("MESSAGE"=>GetMessage("H2O_REDIRECT_SAVED"), "TYPE"=>"OK"));
+  CAdminMessage::ShowMessage(array("MESSAGE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_SAVED")), "TYPE"=>"OK"));
 
 if($message)
   echo $message->Show();
@@ -261,7 +261,7 @@ $tabControl->ShowWarnings("redirect_edit_form", $message);
 // информационная подсказка
 echo BeginNote();?>
 
-<span class="required">*</span><?echo GetMessage("REQUIRED_FIELDS")?>
+<span class="required">*</span><?echo \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REQUIRED_FIELDS"))?>
 <?echo EndNote();?>
 
 <?
