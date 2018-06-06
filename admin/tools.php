@@ -373,4 +373,13 @@ class H2oRedirectTools{
             return $text;
         }
     }
+
+    /**
+     * Возвращает текущую схему запроса
+     * @return mixed
+     */
+    public static function getCurrentScheme()
+    {
+        return $_SERVER['HTTP_X_FORWARDED_PROTO'] ?: $_SERVER['HTTP_X_FORWARDED_SCHEME'] ?: $_SERVER['REQUEST_SCHEME'];
+    }
 }

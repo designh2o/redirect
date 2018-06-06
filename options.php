@@ -7,6 +7,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 
+
 if (!$USER->isAdmin()) {
 	$APPLICATION->authForm('Nope');
 }
@@ -27,7 +28,7 @@ if(!Bitrix\Main\Loader::includeModule("iblock") || !Bitrix\Main\Loader::includeM
 $tabControl = new CAdminTabControl("tabControl", array(
 	array(
 		"DIV" => "edit1",
-		"TAB" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_TAB_SET")),
+		"TAB" => (Loc::getMessage("MAIN_TAB_SET")),
 		"TITLE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_TAB_TITLE_SET")),
 	),
 ));
@@ -99,15 +100,15 @@ $tabControl->begin();
 	?>
 	<input type="submit"
 	       name="save"
-	       value="<?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_SAVE")) ?>"
-	       title="<?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_OPT_SAVE_TITLE")) ?>"
+	       value="<?= (Loc::getMessage("MAIN_SAVE")) ?>"
+	       title="<?= (Loc::getMessage("MAIN_OPT_SAVE_TITLE")) ?>"
 	       class="adm-btn-save"
 		/>
 	<input type="submit"
 	       name="restore"
-	       title="<?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS")) ?>"
+	       title="<?= (Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS")) ?>"
 	       onclick="return confirm('<?= AddSlashes(GetMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING")) ?>')"
-	       value="<?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_RESTORE_DEFAULTS")) ?>"
+	       value="<?= (Loc::getMessage("MAIN_RESTORE_DEFAULTS")) ?>"
 		/>
 	<?php
 	$tabControl->end();
