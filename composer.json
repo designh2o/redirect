@@ -3,6 +3,7 @@
   "description": "Redirects in Bitrix CMS",
   "keywords": ["bitrix", "redirect", "module"],
   "homepage": "http://design-h2o.ru/",
+  "version": "1.0.9",
   "type": "bitrix-module",
   "license": "MIT",
   "support": {
