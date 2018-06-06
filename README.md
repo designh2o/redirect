@@ -13,20 +13,35 @@ composer require ru1cbit/redirect
 
 ## Использование
 Редирект можно воспроизводить по маске. Для этого нужно в редиректе поставить галочку "Является регулярным выражением". 
+
 Вот несколько примеров:
+
 Начальная страница: #^/catalog/\?section=(.+)$#
 Конечная страница: /catalog/$1/
 Пример редиректа: /catalog/?section=shoes => /catalog/shoes/
+
 
 Начальная страница: #^/catalog/(.+)/(.+)\.html$#
 Конечная страница: /catalog/$1/$2/
 Пример редиректа: /catalog/shoes/product.html => /catalog/shoes/product/
 
+
 Начальная страница: #^/product/(.*)$#
+
 Конечная страница: /catalog/$1
+
 Пример редиректа: /product/shoes/ => /catalog/shoes/
 
+Начальная страница: #https://kaliningrad.kkm.ru/shop/(.*)$#
+
+Конечная страница: https://kaliningrad.kkm.ru/store/$1
+
+Пример редиректа: https://kaliningrad.kkm.ru/shop/category/tovar =>  https://kaliningrad.kkm.ru/store/category/tovar
+
+
 ## История версий
+ 1.0.9 добавлена поддержка редиректов на поддомене
+ 
  1.0.6 добавлена поддержка регулярных выражений!
 
 ## Requirements
