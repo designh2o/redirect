@@ -8,7 +8,7 @@ Loader::registerAutoLoadClasses('h2o.redirect', array(
     // no thanks, bitrix, we better will use psr-4 than your class names convention
     'h2o\Redirect\RedirectTable' => 'lib/redirect.php',
 ));
-
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 IncludeModuleLangFile(__FILE__);
 
 Class CHORedirect
@@ -66,6 +66,7 @@ Class CHORedirect
 	 * Метод обработчик события OnBeforeProlog
 	 */
 	public static function onRedirect(){
+
         if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             // сюда попадаем в случае AJAX-запроса, проходим мимо, потому как для аякс запросов редирект не нужен
            return;
@@ -79,13 +80,14 @@ Class CHORedirect
             if(!empty($reqUriArr['query'])) {
                 $getParamStr = $reqUriArr['query'];
             }
+
 			$db_redirect = h2o\Redirect\RedirectTable::getList(array(
 				'filter' => array(
 					'ACTIVE' => 'Y',
 					'IS_REGEXP' => 'N',
 					array(
 						'LOGIC' => 'OR',
-                        '=REDIRECT_FROM' => array(\RequestHelper::getCurrentScheme() . '://'.$_SERVER['HTTP_HOST'].$uri,$uri)
+                        '=REDIRECT_FROM' => array(\h2o\Redirect\H2oRedirectTools::getCurrentScheme() . '://'.$_SERVER['HTTP_HOST'].$uri,$uri)
 					)
 				),'cache'  => [
                     'ttl'         => 36000000,
@@ -114,7 +116,7 @@ Class CHORedirect
 				));
 				while($arRedirect = $db_redirect->fetch()){
 					if($arRedirect['REDIRECT_TO'] != "") {
-                        $uri=\RequestHelper::getCurrentScheme() . '://'.$_SERVER['HTTP_HOST'].$uri;
+                        $uri=\h2o\Redirect\H2oRedirectTools::getCurrentScheme() . '://'.$_SERVER['HTTP_HOST'].$uri;
 						if (preg_match($arRedirect['REDIRECT_FROM'], $uri)) {
                             $redirectTo= preg_replace($arRedirect['REDIRECT_FROM'], $arRedirect['REDIRECT_TO'], $uri);
                             if(!empty($getParamStr)) {
