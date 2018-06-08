@@ -1,7 +1,6 @@
 <?
 use Bitrix\Main\Loader;
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 
 Loader::includeModule('h2o.redirect');
 //CModule::IncludeModule("h2o.redirect");

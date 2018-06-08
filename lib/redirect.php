@@ -3,7 +3,7 @@ namespace h2o\Redirect;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/h2o.redirect/lib/tools.php");
 Loc::loadMessages(__FILE__);
 
 /**

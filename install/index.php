@@ -1,6 +1,7 @@
 <?
+defined('B_PROLOG_INCLUDED') and (B_PROLOG_INCLUDED === true) or die();
 IncludeModuleLangFile(__FILE__);
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
+require_once(realpath(__DIR__ . '/../include.php'));
 if (class_exists("h2o_redirect"))
 	return;
 use \h2o\Redirect\H2oRedirectTools;
@@ -33,15 +34,8 @@ Class h2o_redirect extends CModule
 	{
 		global $DB;
 		RegisterModule(self::MODULE_ID);
-		/**
-		 * Создание глобального меню
-		 */
-		RegisterModuleDependences('main', 'OnBuildGlobalMenu', self::MODULE_ID, 'CHORedirect', 'OnBuildGlobalMenu');
-		/**
-		 * Сам редирект
-		 */
-		RegisterModuleDependences('main', 'OnBeforeProlog', self::MODULE_ID, 'CHORedirect', 'onRedirect');
-		AddEventHandler("main", "OnBeforeProlog", "AjaxHandler", 1);
+
+       AddEventHandler("main", "OnBeforeProlog", "AjaxHandler", 1);
 		/**
 		 * Установка таблицы
 		 */
@@ -54,8 +48,6 @@ Class h2o_redirect extends CModule
 	{
 		global $DB;
 		UnRegisterModule(self::MODULE_ID);
-		UnRegisterModuleDependences('main', 'OnBuildGlobalMenu', self::MODULE_ID, 'CHOredirect', 'OnBuildGlobalMenu');
-		UnRegisterModuleDependences('main', 'OnBeforeProlog', self::MODULE_ID, 'CHOredirect', 'onRedirect');
 
 		$DB->RunSQLBatch(dirname(__FILE__)."/sql/uninstall.sql");
 
@@ -64,13 +56,23 @@ Class h2o_redirect extends CModule
 
 	function InstallEvents()
 	{
-
+        /**
+         * Создание глобального меню
+         */
+        RegisterModuleDependences('main', 'OnBeforeProlog', $this->MODULE_ID, 'h2o\Redirect\CHORedirect', 'onRedirect', 20);
+        /**
+         * Сам редирект
+         */
+        RegisterModuleDependences('main', 'OnBuildGlobalMenu', $this->MODULE_ID, 'h2o\Redirect\CHORedirect', 'OnBuildGlobalMenu', 20);
 		return true;
 	}
 
 	function UnInstallEvents()
 	{
-		return true;
+        UnRegisterModuleDependences('main', 'OnBuildGlobalMenu', self::MODULE_ID, 'CHOredirect', 'OnBuildGlobalMenu');
+        UnRegisterModuleDependences('main', 'OnBeforeProlog', self::MODULE_ID, 'CHOredirect', 'onRedirect');
+
+        return true;
 	}
 
 	function InstallFiles($arParams = array())
