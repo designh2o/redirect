@@ -32,7 +32,7 @@ Class CHORedirect
             "items" => array()
         );
 
-        if (file_exists($path = dirname(__FILE__).'/../admin'))
+        if (file_exists($path = realpath(__DIR__ . '/../admin')))
         {
             if ($dir = opendir($path))
             {

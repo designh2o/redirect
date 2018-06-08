@@ -59,18 +59,18 @@ Class h2o_redirect extends CModule
         /**
          * Создание глобального меню
          */
-        RegisterModuleDependences('main', 'OnBeforeProlog', $this->MODULE_ID, 'h2o\Redirect\CHORedirect', 'onRedirect', 20);
+        RegisterModuleDependences('main', 'OnBeforeProlog', $this->MODULE_ID, '\h2o\Redirect\CHORedirect', 'onRedirect', 20);
         /**
          * Сам редирект
          */
-        RegisterModuleDependences('main', 'OnBuildGlobalMenu', $this->MODULE_ID, 'h2o\Redirect\CHORedirect', 'OnBuildGlobalMenu', 20);
+        RegisterModuleDependences('main', 'OnBuildGlobalMenu', $this->MODULE_ID, '\h2o\Redirect\CHORedirect', 'OnBuildGlobalMenu', 20);
 		return true;
 	}
 
 	function UnInstallEvents()
 	{
-        UnRegisterModuleDependences('main', 'OnBuildGlobalMenu', self::MODULE_ID, 'CHOredirect', 'OnBuildGlobalMenu');
-        UnRegisterModuleDependences('main', 'OnBeforeProlog', self::MODULE_ID, 'CHOredirect', 'onRedirect');
+        UnRegisterModuleDependences('main', 'OnBuildGlobalMenu', self::MODULE_ID, '\h2o\Redirect\CHORedirect', 'OnBuildGlobalMenu');
+        UnRegisterModuleDependences('main', 'OnBeforeProlog', self::MODULE_ID, '\h2o\Redirect\CHORedirect', 'onRedirect');
 
         return true;
 	}
