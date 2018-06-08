@@ -7,6 +7,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 
+
 if (!$USER->isAdmin()) {
 	$APPLICATION->authForm('Nope');
 }
@@ -19,7 +20,7 @@ Loc::loadMessages($context->getServer()->getDocumentRoot() . "/bitrix/modules/ma
 Loc::loadMessages(__FILE__);
 if(!Bitrix\Main\Loader::includeModule("iblock") || !Bitrix\Main\Loader::includeModule(ADMIN_MODULE_NAME)){
 	CAdminMessage::showMessage(array(
-		"MESSAGE" => Loc::getMessage("H2O_ERROR_MODULE"),
+		"MESSAGE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_ERROR_MODULE")),
 		"TYPE" => "ERROR",
 	));
 	return;
@@ -27,8 +28,8 @@ if(!Bitrix\Main\Loader::includeModule("iblock") || !Bitrix\Main\Loader::includeM
 $tabControl = new CAdminTabControl("tabControl", array(
 	array(
 		"DIV" => "edit1",
-		"TAB" => Loc::getMessage("MAIN_TAB_SET"),
-		"TITLE" => Loc::getMessage("MAIN_TAB_TITLE_SET"),
+		"TAB" => (Loc::getMessage("MAIN_TAB_SET")),
+		"TITLE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("MAIN_TAB_TITLE_SET")),
 	),
 ));
 
@@ -36,7 +37,7 @@ if ((!empty($save) || !empty($restore)) && $request->isPost() && check_bitrix_se
 	if (!empty($restore)) {
 		Option::delete(ADMIN_MODULE_NAME);
 		CAdminMessage::showMessage(array(
-			"MESSAGE" => Loc::getMessage("H2O_OPTIONS_RESTORED"),
+			"MESSAGE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_OPTIONS_RESTORED")),
 			"TYPE" => "OK",
 		));
 	} elseif (
@@ -55,11 +56,11 @@ if ((!empty($save) || !empty($restore)) && $request->isPost() && check_bitrix_se
 		);
 
 		CAdminMessage::showMessage(array(
-			"MESSAGE" => Loc::getMessage("H2O_OPTIONS_SAVED"),
+			"MESSAGE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_OPTIONS_SAVED")),
 			"TYPE" => "OK",
 		));
 	} else {
-		CAdminMessage::showMessage(Loc::getMessage("H2O_INVALID_VALUE"));
+		CAdminMessage::showMessage(\h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_INVALID_VALUE")));
 	}
 }
 
@@ -74,17 +75,17 @@ $tabControl->begin();
 	?>
 	<tr>
 		<td width="40%">
-			<label for="status"><?= Loc::getMessage("H2O_REDIRECT_STATUS") ?>:</label>
+			<label for="status"><?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_REDIRECT_STATUS")) ?>:</label>
 		<td width="60%">
 			<select name="status" id="status">
-				<option value="301" <?= (Option::get(ADMIN_MODULE_NAME, "status", '301') == '301') ? 'selected' : '' ?>><?= Loc::getMessage("H2O_REDIRECT_STATUS_301") ?></option>
-				<option value="302" <?= (Option::get(ADMIN_MODULE_NAME, "status", '301') == '302') ? 'selected' : '' ?>><?= Loc::getMessage("H2O_REDIRECT_STATUS_302") ?></option>
+				<option value="301" <?= (Option::get(ADMIN_MODULE_NAME, "status", '301') == '301') ? 'selected' : '' ?>><?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_REDIRECT_STATUS_301")) ?></option>
+				<option value="302" <?= (Option::get(ADMIN_MODULE_NAME, "status", '301') == '302') ? 'selected' : '' ?>><?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_REDIRECT_STATUS_302")) ?></option>
 			</select>
 		</td>
 	</tr>
 	<tr>
 		<td width="40%">
-			<label for="to_track_redirect"><?= Loc::getMessage("H2O_TO_TRACK_REDIRECT") ?>:</label>
+			<label for="to_track_redirect"><?= \h2o\Redirect\H2oRedirectTools::decodeUtf8(Loc::getMessage("H2O_TO_TRACK_REDIRECT")) ?>:</label>
 		<td width="60%">
 			<input
 					type="checkbox"
@@ -99,15 +100,15 @@ $tabControl->begin();
 	?>
 	<input type="submit"
 	       name="save"
-	       value="<?= Loc::getMessage("MAIN_SAVE") ?>"
-	       title="<?= Loc::getMessage("MAIN_OPT_SAVE_TITLE") ?>"
+	       value="<?= (Loc::getMessage("MAIN_SAVE")) ?>"
+	       title="<?= (Loc::getMessage("MAIN_OPT_SAVE_TITLE")) ?>"
 	       class="adm-btn-save"
 		/>
 	<input type="submit"
 	       name="restore"
-	       title="<?= Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS") ?>"
+	       title="<?= (Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS")) ?>"
 	       onclick="return confirm('<?= AddSlashes(GetMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING")) ?>')"
-	       value="<?= Loc::getMessage("MAIN_RESTORE_DEFAULTS") ?>"
+	       value="<?= (Loc::getMessage("MAIN_RESTORE_DEFAULTS")) ?>"
 		/>
 	<?php
 	$tabControl->end();

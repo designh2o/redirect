@@ -1,7 +1,9 @@
 <?
 IncludeModuleLangFile(__FILE__);
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 if (class_exists("h2o_redirect"))
 	return;
+use \h2o\Redirect\H2oRedirectTools;
 
 Class h2o_redirect extends CModule
 {
@@ -20,11 +22,11 @@ Class h2o_redirect extends CModule
 		include(dirname(__FILE__)."/version.php");
 		$this->MODULE_VERSION = $arModuleVersion["VERSION"];
 		$this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
-		$this->MODULE_NAME = GetMessage("h2o.redirect_MODULE_NAME");
-		$this->MODULE_DESCRIPTION = GetMessage("h2o.redirect_MODULE_DESC");
+		$this->MODULE_NAME = H2oRedirectTools::decodeUtf8(GetMessage("h2o.redirect_MODULE_NAME"));
+		$this->MODULE_DESCRIPTION = H2oRedirectTools::decodeUtf8(GetMessage("h2o.redirect_MODULE_DESC"));
 
-		$this->PARTNER_NAME = GetMessage("h2o.redirect_PARTNER_NAME");
-		$this->PARTNER_URI = GetMessage("h2o.redirect_PARTNER_URI");
+		$this->PARTNER_NAME = H2oRedirectTools::decodeUtf8(GetMessage("h2o.redirect_PARTNER_NAME"));
+		$this->PARTNER_URI = H2oRedirectTools::decodeUtf8(GetMessage("h2o.redirect_PARTNER_URI"));
 	}
 
 	function InstallDB($arParams = array())

@@ -1,38 +1,39 @@
 <?
 use Bitrix\Main\Loader;
 use Bitrix\Main\Config\Option;
+use \h2o\Redirect\H2oRedirectTools;
 
-// ïîäêëþ÷èì âñå íåîáõîäèìûå ôàéëû:
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php"); // ïåðâûé îáùèé ïðîëîã
+// Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡Ð¸Ð¼ Ð²ÑÐµ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ñ„Ð°Ð¹Ð»Ñ‹:
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php"); // Ð¿ÐµÑ€Ð²Ñ‹Ð¹ Ð¾Ð±Ñ‰Ð¸Ð¹ Ð¿Ñ€Ð¾Ð»Ð¾Ð³
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 
 Loader::includeModule('h2o.redirect');
-// ïîäêëþ÷èì ÿçûêîâîé ôàéë
+// Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡Ð¸Ð¼ ÑÐ·Ñ‹ÐºÐ¾Ð²Ð¾Ð¹ Ñ„Ð°Ð¹Ð»
 IncludeModuleLangFile(__FILE__);
 
 
 global $DB;
-// ñôîðìèðóåì ñïèñîê çàêëàäîê
+// ÑÑ„Ð¾Ñ€Ð¼Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ð·Ð°ÐºÐ»Ð°Ð´Ð¾Ðº
 $aTabs = array(
-  array("DIV" => "edit1", "TAB" => GetMessage("H2O_REDIRECT_TAB_MAIN"), "ICON"=>"main_user_edit", "TITLE"=>GetMessage("H2O_REDIRECT_TAB_MAIN")),
+  array("DIV" => "edit1", "TAB" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_TAB_MAIN")), "ICON"=>"main_user_edit", "TITLE"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_TAB_MAIN"))),
   
 );
 $tabControl = new CAdminTabControl("tabControl", $aTabs);
 
-$ID = intval($ID);		// èäåíòèôèêàòîð ðåäàêòèðóåìîé çàïèñè
-$message = null;		// ñîîáùåíèå îá îøèáêå
-$bVarsFromForm = false; // ôëàã "Äàííûå ïîëó÷åíû ñ ôîðìû", îáîçíà÷àþùèé, ÷òî âûâîäèìûå äàííûå ïîëó÷åíû ñ ôîðìû, à íå èç ÁÄ.
+$ID = intval($ID);		// Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€ÑƒÐµÐ¼Ð¾Ð¹ Ð·Ð°Ð¿Ð¸ÑÐ¸
+$message = null;		// ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð¾Ð± Ð¾ÑˆÐ¸Ð±ÐºÐµ
+$bVarsFromForm = false; // Ñ„Ð»Ð°Ð³ "Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ñ‹ Ñ Ñ„Ð¾Ñ€Ð¼Ñ‹", Ð¾Ð±Ð¾Ð·Ð½Ð°Ñ‡Ð°ÑŽÑ‰Ð¸Ð¹, Ñ‡Ñ‚Ð¾ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ñ‹ Ñ Ñ„Ð¾Ñ€Ð¼Ñ‹, Ð° Ð½Ðµ Ð¸Ð· Ð‘Ð”.
 
 // ******************************************************************** //
-//                ÎÁÐÀÁÎÒÊÀ ÈÇÌÅÍÅÍÈÉ ÔÎÐÌÛ                             //
+//                ÐžÐ‘Ð ÐÐ‘ÐžÐ¢ÐšÐ Ð˜Ð—ÐœÐ•ÐÐ•ÐÐ˜Ð™ Ð¤ÐžÐ ÐœÐ«                             //
 // ******************************************************************** //
 
 if(
-    $REQUEST_METHOD == "POST" // ïðîâåðêà ìåòîäà âûçîâà ñòðàíèöû
+    $REQUEST_METHOD == "POST" // Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¼ÐµÑ‚Ð¾Ð´Ð° Ð²Ñ‹Ð·Ð¾Ð²Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
     &&
-    ($save!="" || $apply!="") // ïðîâåðêà íàæàòèÿ êíîïîê "Ñîõðàíèòü" è "Ïðèìåíèòü"
+    ($save!="" || $apply!="") // Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ ÐºÐ½Ð¾Ð¿Ð¾Ðº "Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ" Ð¸ "ÐŸÑ€Ð¸Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ"
     &&
-    check_bitrix_sessid()     // ïðîâåðêà èäåíòèôèêàòîðà ñåññèè
+    check_bitrix_sessid()     // Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€Ð° ÑÐµÑÑÐ¸Ð¸
 )
 {
   
@@ -47,7 +48,7 @@ if(
   }
  
   
-  // ñîõðàíåíèå äàííûõ
+  // ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ð´Ð°Ð½Ð½Ñ‹Ñ…
   if($ID > 0)
   {
     $result = \h2o\Redirect\RedirectTable::update($ID, $arFields);
@@ -62,31 +63,31 @@ if(
 
   if($result->isSuccess())
   {
-    // åñëè ñîõðàíåíèå ïðîøëî óäà÷íî - ïåðåíàïðàâèì íà íîâóþ ñòðàíèöó 
-    // (â öåëÿõ çàùèòû îò ïîâòîðíîé îòïðàâêè ôîðìû íàæàòèåì êíîïêè "Îáíîâèòü" â áðàóçåðå)
+    // ÐµÑÐ»Ð¸ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ð¿Ñ€Ð¾ÑˆÐ»Ð¾ ÑƒÐ´Ð°Ñ‡Ð½Ð¾ - Ð¿ÐµÑ€ÐµÐ½Ð°Ð¿Ñ€Ð°Ð²Ð¸Ð¼ Ð½Ð° Ð½Ð¾Ð²ÑƒÑŽ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ 
+    // (Ð² Ñ†ÐµÐ»ÑÑ… Ð·Ð°Ñ‰Ð¸Ñ‚Ñ‹ Ð¾Ñ‚ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾Ð¹ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ¸ Ñ„Ð¾Ñ€Ð¼Ñ‹ Ð½Ð°Ð¶Ð°Ñ‚Ð¸ÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÐ¸ "ÐžÐ±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ" Ð² Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€Ðµ)
     if ($apply != "")
-      // åñëè áûëà íàæàòà êíîïêà "Ïðèìåíèòü" - îòïðàâëÿåì îáðàòíî íà ôîðìó.
+      // ÐµÑÐ»Ð¸ Ð±Ñ‹Ð»Ð° Ð½Ð°Ð¶Ð°Ñ‚Ð° ÐºÐ½Ð¾Ð¿ÐºÐ° "ÐŸÑ€Ð¸Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ" - Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾ Ð½Ð° Ñ„Ð¾Ñ€Ð¼Ñƒ.
   
       LocalRedirect("/bitrix/admin/h2o_redirect_edit.php?ID=".$ID."&mess=ok&lang=".LANG."&".$tabControl->ActiveTabParam());
     else
-      // åñëè áûëà íàæàòà êíîïêà "Ñîõðàíèòü" - îòïðàâëÿåì ê ñïèñêó ýëåìåíòîâ.
+      // ÐµÑÐ»Ð¸ Ð±Ñ‹Ð»Ð° Ð½Ð°Ð¶Ð°Ñ‚Ð° ÐºÐ½Ð¾Ð¿ÐºÐ° "Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ" - Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ Ðº ÑÐ¿Ð¸ÑÐºÑƒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð².
       LocalRedirect("/bitrix/admin/h2o_redirect_list.php?lang=".LANG);
   }
   else
   {
-    // åñëè â ïðîöåññå ñîõðàíåíèÿ âîçíèêëè îøèáêè - ïîëó÷àåì òåêñò îøèáêè è ìåíÿåì âûøåîïðåäåë¸ííûå ïåðåìåííûå
+    // ÐµÑÐ»Ð¸ Ð² Ð¿Ñ€Ð¾Ñ†ÐµÑÑÐµ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð²Ð¾Ð·Ð½Ð¸ÐºÐ»Ð¸ Ð¾ÑˆÐ¸Ð±ÐºÐ¸ - Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ‚ÐµÐºÑÑ‚ Ð¾ÑˆÐ¸Ð±ÐºÐ¸ Ð¸ Ð¼ÐµÐ½ÑÐµÐ¼ Ð²Ñ‹ÑˆÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»Ñ‘Ð½Ð½Ñ‹Ðµ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ
     if($e = $result->getErrorMessages())
-      $message = new CAdminMessage(GetMessage("H2O_REDIRECT_ERROR").implode("; ",$e));
+      $message = new CAdminMessage(H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ERROR")).implode("; ",$e));
     $bVarsFromForm = true;
   }
 }
 
 // ******************************************************************** //
-//                ÂÛÁÎÐÊÀ È ÏÎÄÃÎÒÎÂÊÀ ÄÀÍÍÛÕ ÔÎÐÌÛ                     //
+//                Ð’Ð«Ð‘ÐžÐ ÐšÐ Ð˜ ÐŸÐžÐ”Ð“ÐžÐ¢ÐžÐ’ÐšÐ Ð”ÐÐÐÐ«Ð¥ Ð¤ÐžÐ ÐœÐ«                     //
 // ******************************************************************** //
 
 
-// âûáîðêà äàííûõ
+// Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐ° Ð´Ð°Ð½Ð½Ñ‹Ñ…
 if($ID>0)
 {
 	$res = \h2o\Redirect\RedirectTable::getById($ID);
@@ -96,25 +97,25 @@ if($ID>0)
 }
 
 
-// åñëè äàííûå ïåðåäàíû èç ôîðìû, èíèöèàëèçèðóåì èõ
+// ÐµÑÐ»Ð¸ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¿ÐµÑ€ÐµÐ´Ð°Ð½Ñ‹ Ð¸Ð· Ñ„Ð¾Ñ€Ð¼Ñ‹, Ð¸Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð¸Ñ€ÑƒÐµÐ¼ Ð¸Ñ…
 if($bVarsFromForm)
   $DB->InitTableVarsForEdit("b_list_redirect", "", "str_");
 
 // ******************************************************************** //
-//                ÂÛÂÎÄ ÔÎÐÌÛ                                           //
+//                Ð’Ð«Ð’ÐžÐ” Ð¤ÐžÐ ÐœÐ«                                           //
 // ******************************************************************** //
 
-// óñòàíîâèì çàãîëîâîê ñòðàíèöû
-$APPLICATION->SetTitle(($ID>0? GetMessage("H2O_REDIRECT_EDIT_TITLE").$ID : GetMessage("H2O_REDIRECT_ADD_TITLE")));
+// ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ð¼ Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
+$APPLICATION->SetTitle(($ID>0? H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_EDIT_TITLE")).$ID : H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD_TITLE"))));
 
-// íå çàáóäåì ðàçäåëèòü ïîäãîòîâêó äàííûõ è âûâîä
+// Ð½Ðµ Ð·Ð°Ð±ÑƒÐ´ÐµÐ¼ Ñ€Ð°Ð·Ð´ÐµÐ»Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð´Ð³Ð¾Ñ‚Ð¾Ð²ÐºÑƒ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¸ Ð²Ñ‹Ð²Ð¾Ð´
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
 
-// êîíôèãóðàöèÿ àäìèíèñòðàòèâíîãî ìåíþ
+// ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
 $aMenu = array(
   array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_LIST"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_LIST_TITLE"),
+    "TEXT"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_LIST")),
+    "TITLE"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_LIST_TITLE")),
     "LINK"=>"h2o_redirect_list.php?lang=".LANG,
     "ICON"=>"btn_list",
   )
@@ -125,31 +126,31 @@ if($ID>0)
 	$toTrackRedirect = Option::get('h2o.redirect', "to_track_redirect", 'Y') == 'Y';
   $aMenu[] = array("SEPARATOR"=>"Y");
   $aMenu[] = array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_ADD"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_ADD"),
+    "TEXT"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD")),
+    "TITLE"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD")),
     "LINK"=>"h2o_redirect_edit.php?lang=".LANG,
     "ICON"=>"btn_new",
   );
   $aMenu[] = array(
-    "TEXT"=>GetMessage("H2O_REDIRECT_DELETE"),
-    "TITLE"=>GetMessage("H2O_REDIRECT_DELETE"),
-    "LINK"=>"javascript:if(confirm('".GetMessage("H2O_REDIRECT_DELETE_CONF")."'))window.location='h2o_redirect_list.php?ID=".$ID."&action=delete&lang=".LANG."&".bitrix_sessid_get()."';",
+    "TEXT"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE")),
+    "TITLE"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE")),
+    "LINK"=>"javascript:if(confirm('".H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE_CONF"))."'))window.location='h2o_redirect_list.php?ID=".$ID."&action=delete&lang=".LANG."&".bitrix_sessid_get()."';",
     "ICON"=>"btn_delete",
   );
   
 }
 
-// ñîçäàíèå ýêçåìïëÿðà êëàññà àäìèíèñòðàòèâíîãî ìåíþ
+// ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€Ð° ÐºÐ»Ð°ÑÑÐ° Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
 $context = new CAdminContextMenu($aMenu);
 
-// âûâîä àäìèíèñòðàòèâíîãî ìåíþ
+// Ð²Ñ‹Ð²Ð¾Ð´ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
 $context->Show();
 ?>
 
 <?
-// åñëè åñòü ñîîáùåíèÿ îá îøèáêàõ èëè îá óñïåøíîì ñîõðàíåíèè - âûâåäåì èõ.
+// ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð¾Ð± Ð¾ÑˆÐ¸Ð±ÐºÐ°Ñ… Ð¸Ð»Ð¸ Ð¾Ð± ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¼ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ð¸ - Ð²Ñ‹Ð²ÐµÐ´ÐµÐ¼ Ð¸Ñ….
 if($_REQUEST["mess"] == "ok" && $ID>0)
-  CAdminMessage::ShowMessage(array("MESSAGE"=>GetMessage("H2O_REDIRECT_SAVED"), "TYPE"=>"OK"));
+  CAdminMessage::ShowMessage(array("MESSAGE"=>H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_SAVED")), "TYPE"=>"OK"));
 
 if($message)
   echo $message->Show();
@@ -158,19 +159,19 @@ elseif($redirect_element->LAST_ERROR!="")
 ?>
 
 <?
-// äàëåå âûâîäèì ñîáñòâåííî ôîðìó
+// Ð´Ð°Ð»ÐµÐµ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ ÑÐ¾Ð±ÑÑ‚Ð²ÐµÐ½Ð½Ð¾ Ñ„Ð¾Ñ€Ð¼Ñƒ
 ?>
 <form method="POST" action="<?echo $APPLICATION->GetCurPage()?>" enctype="multipart/form-data" name="redirect_edit_form">
-<?// ïðîâåðêà èäåíòèôèêàòîðà ñåññèè ?>
+<?// Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€Ð° ÑÐµÑÑÐ¸Ð¸ ?>
 <?echo bitrix_sessid_post();?>
 <?
-// îòîáðàçèì çàãîëîâêè çàêëàäîê
+// Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ð¼ Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²ÐºÐ¸ Ð·Ð°ÐºÐ»Ð°Ð´Ð¾Ðº
 $tabControl->Begin();
 CJSCore::Init(array('date'));
 ?>
 <?
 //********************
-// ïåðâàÿ çàêëàäêà - ôîðìà ðåäàêòèðîâàíèÿ ïàðàìåòðîâ ðàññûëêè
+// Ð¿ÐµÑ€Ð²Ð°Ñ Ð·Ð°ÐºÐ»Ð°Ð´ÐºÐ° - Ñ„Ð¾Ñ€Ð¼Ð° Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð² Ñ€Ð°ÑÑÑ‹Ð»ÐºÐ¸
 //********************
 $tabControl->BeginNextTab();
 
@@ -233,7 +234,7 @@ foreach($arMap as $code => $field):
 
 <?
 
-// çàâåðøåíèå ôîðìû - âûâîä êíîïîê ñîõðàíåíèÿ èçìåíåíèé
+// Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¸Ðµ Ñ„Ð¾Ñ€Ð¼Ñ‹ - Ð²Ñ‹Ð²Ð¾Ð´ ÐºÐ½Ð¾Ð¿Ð¾Ðº ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ð¹
 $tabControl->Buttons(
   array(
     "disabled"=>false,
@@ -247,24 +248,23 @@ $tabControl->Buttons(
   <input type="hidden" name="ID" value="<?=$ID?>">
 <?endif;?>
 <?
-// çàâåðøàåì èíòåðôåéñ çàêëàäîê
+// Ð·Ð°Ð²ÐµÑ€ÑˆÐ°ÐµÐ¼ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹Ñ Ð·Ð°ÐºÐ»Ð°Ð´Ð¾Ðº
 $tabControl->End();
 ?>
 
 <?
-// äîïîëíèòåëüíîå óâåäîìëåíèå îá îøèáêàõ - âûâîä èêîíêè îêîëî ïîëÿ, â êîòîðîì âîçíèêëà îøèáêà
+// Ð´Ð¾Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ðµ ÑƒÐ²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ðµ Ð¾Ð± Ð¾ÑˆÐ¸Ð±ÐºÐ°Ñ… - Ð²Ñ‹Ð²Ð¾Ð´ Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ð¾ÐºÐ¾Ð»Ð¾ Ð¿Ð¾Ð»Ñ, Ð² ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼ Ð²Ð¾Ð·Ð½Ð¸ÐºÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ°
 $tabControl->ShowWarnings("redirect_edit_form", $message);
 ?>
 
 
 <?
-// èíôîðìàöèîííàÿ ïîäñêàçêà
+// Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ð¾Ð½Ð½Ð°Ñ Ð¿Ð¾Ð´ÑÐºÐ°Ð·ÐºÐ°
 echo BeginNote();?>
-
-<span class="required">*</span><?echo GetMessage("REQUIRED_FIELDS")?>
+<span class="required ">*</span> <?echo (GetMessage("REQUIRED_FIELDS"))?>
 <?echo EndNote();?>
 
 <?
-// çàâåðøåíèå ñòðàíèöû
+// Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¸Ðµ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");
 ?>
