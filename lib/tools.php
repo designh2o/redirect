@@ -2,7 +2,7 @@
 namespace h2o\Redirect;
 if(! \Bitrix\Main\Loader::includeModule ('iblock'))
 {
-	ShowError(GetMessage('IBLOCK_MODULE_NOT_INSTALLED'));
+	ShowError(H2oRedirectTools::decodeUtf8(GetMessage('IBLOCK_MODULE_NOT_INSTALLED')));
 	return;
 }
 IncludeModuleLangFile(__FILE__);
@@ -14,7 +14,7 @@ class CIBlockPropertyUserID
 		return array(
 			"PROPERTY_TYPE" => "S",
 			"USER_TYPE" => "UserID",
-			"DESCRIPTION" => GetMessage("IBLOCK_PROP_USERID_DESC"),
+			"DESCRIPTION" => H2oRedirectTools::decodeUtf8(GetMessage("IBLOCK_PROP_USERID_DESC")),
 			"GetAdminListViewHTML" => array("CIBlockPropertyUserID","GetAdminListViewHTML"),
 			"GetPropertyFieldHtml" => array("CIBlockPropertyUserID","GetPropertyFieldHtml"),
 			"ConvertToDB" => array("CIBlockPropertyUserID","ConvertToDB"),
@@ -34,7 +34,7 @@ class CIBlockPropertyUserID
 		$arUser = $cache[$value];
 		if($arUser)
 		{
-			return "[<a title='".GetMessage("MAIN_EDIT_USER_PROFILE")."' href='user_edit.php?ID=".$arUser["ID"]."&lang=".LANG."'>".$arUser["ID"]."</a>] (".htmlspecialcharsbx($arUser["LOGIN"]).") ".htmlspecialcharsbx($arUser["NAME"])." ".htmlspecialcharsbx($arUser["LAST_NAME"]);
+			return "[<a title='".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_EDIT_USER_PROFILE"))."' href='user_edit.php?ID=".$arUser["ID"]."&lang=".LANG."'>".$arUser["ID"]."</a>] (".htmlspecialcharsbx($arUser["LOGIN"]).") ".htmlspecialcharsbx($arUser["NAME"])." ".htmlspecialcharsbx($arUser["LAST_NAME"]);
 		}
 		else
 			return "&nbsp;";
@@ -53,16 +53,16 @@ class CIBlockPropertyUserID
 		if ($default_value == $USER->GetID())
 		{
 			$select = "CU";
-			$res = "[<a title='".GetMessage("MAIN_EDIT_USER_PROFILE")."'  href='/bitrix/admin/user_edit.php?ID=".$USER->GetID()."&lang=".LANG."'>".$USER->GetID()."</a>] (".htmlspecialcharsbx($USER->GetLogin()).") ".htmlspecialcharsbx($USER->GetFirstName())." ".htmlspecialcharsbx($USER->GetLastName());
+			$res = "[<a title='".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_EDIT_USER_PROFILE"))."'  href='/bitrix/admin/user_edit.php?ID=".$USER->GetID()."&lang=".LANG."'>".$USER->GetID()."</a>] (".htmlspecialcharsbx($USER->GetLogin()).") ".htmlspecialcharsbx($USER->GetFirstName())." ".htmlspecialcharsbx($USER->GetLastName());
 		}
 		elseif ($default_value > 0)
 		{
 			$select = "SU";
 			$rsUsers = \CUser::GetList($by, $order, array("ID" => $default_value));
 			if ($arUser = $rsUsers->Fetch())
-				$res = "[<a title='".GetMessage("MAIN_EDIT_USER_PROFILE")."'  href='/bitrix/admin/user_edit.php?ID=".$arUser["ID"]."&lang=".LANG."'>".$arUser["ID"]."</a>] (".htmlspecialcharsbx($arUser["LOGIN"]).") ".htmlspecialcharsbx($arUser["NAME"])." ".htmlspecialcharsbx($arUser["LAST_NAME"]);
+				$res = "[<a title='".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_EDIT_USER_PROFILE"))."'  href='/bitrix/admin/user_edit.php?ID=".$arUser["ID"]."&lang=".LANG."'>".$arUser["ID"]."</a>] (".htmlspecialcharsbx($arUser["LOGIN"]).") ".htmlspecialcharsbx($arUser["NAME"])." ".htmlspecialcharsbx($arUser["LAST_NAME"]);
 			else
-				$res = "&nbsp;".GetMessage("MAIN_NOT_FOUND");
+				$res = "&nbsp;".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_NOT_FOUND"));
 		}
 		else
 		{
@@ -88,9 +88,9 @@ class CIBlockPropertyUserID
 							v.readOnly = false;
 							document.getElementById('FindUser<?=$name_x?>').disabled = false;
 						}">
-					<option value="none"<?if($select=="none")echo " selected"?>><?=GetMessage("IBLOCK_PROP_USERID_NONE")?></option>
-					<option value="CU"<?if($select=="CU")echo " selected"?>><?=GetMessage("IBLOCK_PROP_USERID_CURR")?></option>
-					<option value="SU"<?if($select=="SU")echo " selected"?>><?=GetMessage("IBLOCK_PROP_USERID_OTHR")?></option>
+					<option value="none"<?if($select=="none")echo " selected"?>><?=H2oRedirectTools::decodeUtf8(GetMessage("IBLOCK_PROP_USERID_NONE"))?></option>
+					<option value="CU"<?if($select=="CU")echo " selected"?>><?=H2oRedirectTools::decodeUtf8(GetMessage("IBLOCK_PROP_USERID_CURR"))?></option>
+					<option value="SU"<?if($select=="SU")echo " selected"?>><?=H2oRedirectTools::decodeUtf8(GetMessage("IBLOCK_PROP_USERID_OTHR"))?></option>
 				</select>&nbsp;
 				<?echo self::FindUserIDNew(htmlspecialcharsbx($strHTMLControlName["VALUE"]), $value["VALUE"], $res, htmlspecialcharsEx($strHTMLControlName["FORM_NAME"]), $select);
 			$return = ob_get_contents();
@@ -165,7 +165,7 @@ class CIBlockPropertyUserID
 				tv".$tag_name_x."=document.".$form_name."['".$tag_name_escaped."'].value;
 				if (tv".$tag_name_x."!='')
 				{
-					DV_".$tag_name_x.".innerHTML = '<i>".GetMessage("MAIN_WAIT")."</i>';
+					DV_".$tag_name_x.".innerHTML = '<i>".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_WAIT"))."</i>';
 					if (tv".$tag_name_x."!=".intVal($USER->GetID()).")
 					{
 						document.getElementById(\"hiddenframe".$tag_name_escaped."\").src='/bitrix/admin/get_user.php?ID=' + tv".$tag_name_x."+'&strName=".$tag_name_escaped."&lang=".LANG.(defined("ADMIN_SECTION") && ADMIN_SECTION===true?"&admin_section=Y":"")."';
@@ -173,7 +173,7 @@ class CIBlockPropertyUserID
 					}
 					else
 					{
-						DV_".$tag_name_x.".innerHTML = '".\CUtil::JSEscape("[<a title=\"".GetMessage("MAIN_EDIT_USER_PROFILE")."\" class=\"tablebodylink\" href=\"/bitrix/admin/user_edit.php?ID=".$USER->GetID()."&lang=".LANG."\">".$USER->GetID()."</a>] (".htmlspecialcharsbx($USER->GetLogin()).") ".htmlspecialcharsbx($USER->GetFirstName())." ".htmlspecialcharsbx($USER->GetLastName()))."';
+						DV_".$tag_name_x.".innerHTML = '".\CUtil::JSEscape("[<a title=\"".H2oRedirectTools::decodeUtf8(GetMessage("MAIN_EDIT_USER_PROFILE"))."\" class=\"tablebodylink\" href=\"/bitrix/admin/user_edit.php?ID=".$USER->GetID()."&lang=".LANG."\">".$USER->GetID()."</a>] (".htmlspecialcharsbx($USER->GetLogin()).") ".htmlspecialcharsbx($USER->GetFirstName())." ".htmlspecialcharsbx($USER->GetLastName()))."';
 						document.getElementById('SELECT".$tag_name_escaped."').value = 'CU';
 					}
 				}
@@ -281,7 +281,7 @@ class H2oRedirectTools{
 		if($property_fields["MULTIPLE"]=="Y")
 		{
 			echo '<tr><td>'.
-				'<input type="button" value="'.GetMessage("IBLOCK_AT_PROP_ADD").'..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$property_fields["LINK_IBLOCK_ID"].'&amp;n='.$name.'&amp;m=y&amp;k='.$key.($fixIBlock ? '&amp;iblockfix=y' : '').'\', 900, 700);">'.
+				'<input type="button" value="'.H2oRedirectTools::decodeUtf8(GetMessage("IBLOCK_AT_PROP_ADD")).'..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/iblock_element_search.php?lang='.LANGUAGE_ID.'&amp;IBLOCK_ID='.$property_fields["LINK_IBLOCK_ID"].'&amp;n='.$name.'&amp;m=y&amp;k='.$key.($fixIBlock ? '&amp;iblockfix=y' : '').'\', 900, 700);">'.
 				'<span id="sp_'.md5($name).'_'.$key.'" ></span>'.
 				'</td></tr>';
 		}
@@ -345,5 +345,41 @@ class H2oRedirectTools{
 				$url.= "&".urlencode($name)."=".urlencode($value);
 		
 		return $url.$strAdd;
+    }
+
+    /**
+     * Декодирует строку из utf8 в кодировку сайта или другую, заданную явно через параметр. Если желаемая кодировка utf8, конвертация не произойдёт.
+     * @param string|array $text
+     * @param string $toEncoding
+     * @return string|array
+     */
+    public static function decodeUtf8($text, $toEncoding = SITE_CHARSET)
+    {
+        if (strtolower($toEncoding) != 'utf-8') {
+            if(is_array($text))
+            {
+                array_walk_recursive(
+                    $text,
+                    function (&$value, $key, $toEncoding){
+                        $value = \iconv('utf-8', $toEncoding . "//IGNORE", $value);
+                    },
+                    $toEncoding
+                );
+                return $text;
+            }else{
+                return \iconv('utf-8', $toEncoding . "//IGNORE", $text);
+            }
+        } else {
+            return $text;
+        }
+    }
+
+    /**
+     * Возвращает текущую схему запроса
+     * @return mixed
+     */
+    public static function getCurrentScheme()
+    {
+        return $_SERVER['HTTP_X_FORWARDED_PROTO'] ?: $_SERVER['HTTP_X_FORWARDED_SCHEME'] ?: $_SERVER['REQUEST_SCHEME'];
     }
 }
