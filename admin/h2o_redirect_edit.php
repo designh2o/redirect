@@ -5,7 +5,6 @@ use \h2o\Redirect\H2oRedirectTools;
 
 // подключим все необходимые файлы:
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php"); // первый общий пролог
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 
 Loader::includeModule('h2o.redirect');
 // подключим языковой файл
