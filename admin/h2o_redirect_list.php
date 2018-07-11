@@ -1,7 +1,6 @@
 <?
 use Bitrix\Main\Loader;
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/h2o.redirect/admin/tools.php");
 
 Loader::includeModule('h2o.redirect');
 //CModule::IncludeModule("h2o.redirect");
@@ -81,13 +80,13 @@ if($adminList->EditAction())
 		if(!$result->isSuccess())
 		{
 			if($e = $result->getErrorMessages())
-				$adminList->AddGroupError(GetMessage("REDIRECT_SAVE_ERROR")." ".$e, $ID);
+				$adminList->AddGroupError(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_SAVE_ERROR"))." ".$e, $ID);
 			$DB->Rollback();
 		}
 	}
     else
     {
-      $adminList->AddGroupError(GetMessage("REDIRECT_SAVE_ERROR")." ".GetMessage("REDIRECT_NO_ELEMENT"), $ID);
+      $adminList->AddGroupError(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_SAVE_ERROR"))." ".\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_NO_ELEMENT")), $ID);
       $DB->Rollback();
     }
     $DB->Commit();
@@ -128,7 +127,7 @@ if(($arID = $adminList->GroupAction()))
 	  if(!$result->isSuccess())
 	  {
 	      $DB->Rollback();
-          $adminList->AddGroupError(GetMessage("REDIRECT_DELETE_ERROR"), $ID);
+          $adminList->AddGroupError(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_DELETE_ERROR")), $ID);
 	  }
       $DB->Commit();
       break;
@@ -143,10 +142,10 @@ if(($arID = $adminList->GroupAction()))
         $result = \h2o\Redirect\RedirectTable::update($ID, $arFields);
         if(!$result->isSuccess())
         	if($e = $result->getErrorMessages())
-          		$adminList->AddGroupError(GetMessage("REDIRECT_SAVE_ERROR").$e, $ID);
+          		$adminList->AddGroupError(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_SAVE_ERROR")).$e, $ID);
       }
       else
-        $adminList->AddGroupError(GetMessage("REDIRECT_SAVE_ERROR")." ".GetMessage("REDIRECT_NO_ELEMENT"), $ID);
+        $adminList->AddGroupError(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_SAVE_ERROR"))." ".\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("REDIRECT_NO_ELEMENT")), $ID);
       break;
     }
   }
@@ -163,7 +162,7 @@ $myData = \h2o\Redirect\RedirectTable::getList(
 $myData = new CAdminResult($myData, $listTableId);
 $myData->NavStart();
 
-$adminList->NavText($myData->GetNavPrint(GetMessage("H2O_REDIRECT_ADMIN_NAV")));
+$adminList->NavText($myData->GetNavPrint(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADMIN_NAV"))));
 $toTrackRedirect = Bitrix\Main\Config\Option::get('h2o.redirect', "to_track_redirect", 'Y') == 'Y';
 $cols = \h2o\Redirect\RedirectTable::getMap();
 $colHeaders = array();
@@ -192,10 +191,10 @@ while ($arRes = $myData->GetNext())
 	$row =& $adminList->AddRow($arRes["ID"], $arRes);
 
 	if (in_array("ACTIVE", $visibleHeaderColumns)){
-		$row->AddViewField("ACTIVE", $arRes['ACTIVE'] == 'Y'?GetMessage("H2O_REDIRECT_YES"):GetMessage("H2O_REDIRECT_NO"));
+		$row->AddViewField("ACTIVE", $arRes['ACTIVE'] == 'Y'?\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_YES")):\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_NO")));
 	}
 	if (in_array("IS_REGEXP", $visibleHeaderColumns)){
-		$row->AddViewField("IS_REGEXP", $arRes['IS_REGEXP'] == 'Y'?GetMessage("H2O_REDIRECT_YES"):GetMessage("H2O_REDIRECT_NO"));
+		$row->AddViewField("IS_REGEXP", $arRes['IS_REGEXP'] == 'Y'?\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_YES")):\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_NO")));
 	}
 	//$el_edit_url = htmlspecialcharsbx(\h2o\Redirect\H2oRedirectTools::GetAdminElementEditLink($arRes["ID"]));
 	/*$arActions[] = array(
@@ -206,8 +205,8 @@ while ($arRes = $myData->GetNext())
 	);*/
 	$el_edit_url = htmlspecialcharsbx(\h2o\Redirect\H2oRedirectTools::GetAdminElementEditLink($arRes["ID"]));
 	$arActions = array();
-	$arActions[] = array("ICON" => "edit", "TEXT" => GetMessage("H2O_REDIRECT_EDIT"), "ACTION" => $adminList->ActionRedirect($el_edit_url), "DEFAULT" => true,);
-	$arActions[] = array("ICON" => "delete", "TEXT" => GetMessage("H2O_REDIRECT_DELETE"), "ACTION" => "if(confirm('" . GetMessageJS("H2O_REDIRECT_DEL_CONF") . "')) " . $adminList->ActionDoGroup($arRes["ID"], "delete"),);
+	$arActions[] = array("ICON" => "edit", "TEXT" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_EDIT")), "ACTION" => $adminList->ActionRedirect($el_edit_url), "DEFAULT" => true,);
+	$arActions[] = array("ICON" => "delete", "TEXT" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_DELETE")), "ACTION" => "if(confirm('" . \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessageJS("H2O_REDIRECT_DEL_CONF")) . "')) " . $adminList->ActionDoGroup($arRes["ID"], "delete"),);
 	$row->AddActions($arActions);
 }
 
@@ -216,12 +215,12 @@ while ($arRes = $myData->GetNext())
 $adminList->AddFooter(
 	array(
 		array(
-			"title" => GetMessage("MAIN_ADMIN_LIST_SELECTED"),
+			"title" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("MAIN_ADMIN_LIST_SELECTED")),
 			"value" => $myData->SelectedRowsCount()
 		),
 		array(
 			"counter" => true,
-			"title" => GetMessage("MAIN_ADMIN_LIST_CHECKED"),
+			"title" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("MAIN_ADMIN_LIST_CHECKED")),
 			"value" => "0"
 		),
 	)
@@ -229,9 +228,9 @@ $adminList->AddFooter(
 
 // групповые действия
 $adminList->AddGroupActionTable(Array(
-  "delete"=>GetMessage("MAIN_ADMIN_LIST_DELETE"), // удалить выбранные элементы
-  "activate"=>GetMessage("MAIN_ADMIN_LIST_ACTIVATE"), // активировать выбранные элементы
-  "deactivate"=>GetMessage("MAIN_ADMIN_LIST_DEACTIVATE"), // деактивировать выбранные элементы
+  "delete"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("MAIN_ADMIN_LIST_DELETE")), // удалить выбранные элементы
+  "activate"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("MAIN_ADMIN_LIST_ACTIVATE")), // активировать выбранные элементы
+  "deactivate"=>\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("MAIN_ADMIN_LIST_DEACTIVATE")), // деактивировать выбранные элементы
   ));
 
 //Добавление кнопок на добавление элемента в таблицу
@@ -241,17 +240,17 @@ if (empty($aContext))
 {
 	$aContext[] = array(
 			"ICON" => "btn_new",
-			"TEXT" => GetMessage("H2O_REDIRECT_ADD"),
+			"TEXT" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD")),
 			"LINK" => h2o\Redirect\H2oRedirectTools::GetAdminElementEditLink(0) ,
 			"LINK_PARAM" => "",
-			"TITLE" => GetMessage("H2O_REDIRECT_ADD")
+			"TITLE" => \h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADD"))
 	);
 }
 
 $adminList->AddAdminContextMenu($aContext); //Подключение контекстного меню
 $adminList->CheckListMode();
 
-$APPLICATION->SetTitle(GetMessage("H2O_REDIRECT_ADMIN_TITLE"));
+$APPLICATION->SetTitle(\h2o\Redirect\H2oRedirectTools::decodeUtf8(GetMessage("H2O_REDIRECT_ADMIN_TITLE")));
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
 

@@ -1,5 +1,5 @@
 <?
-$MESS["H2O_REDIRECT_DEL_CONF"] = "Точно?";
+$MESS["H2O_REDIRECT_DEL_CONF"] = "Точно удалить редирект?";
 $MESS["H2O_REDIRECT_ADMIN_TITLE"] = "Список редиректов";
 $MESS["H2O_REDIRECT_ADMIN_FILTER_CREATED"] = "Дата создания";
 $MESS["H2O_REDIRECT_ADMIN_FILTER_USER_ID"] = "Пользователь";

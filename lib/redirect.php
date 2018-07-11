@@ -3,6 +3,7 @@ namespace h2o\Redirect;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
+require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/h2o.redirect/lib/tools.php");
 Loc::loadMessages(__FILE__);
 
 /**
@@ -44,33 +45,33 @@ class RedirectTable extends Entity\DataManager
 				'data_type' => 'integer',
 				'primary' => true,
 				'autocomplete' => true,
-				'title' => Loc::getMessage('REDIRECT_ENTITY_ID_FIELD'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_ID_FIELD')),
 			),
 			'ACTIVE' => array(
 				'data_type' => 'boolean',
 				'values' => array('N', 'Y'),
-				'title' => Loc::getMessage('REDIRECT_ENTITY_ACTIVE_FIELD'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_ACTIVE_FIELD')),
 				'editable' => true
 			),
 			'REDIRECT_FROM' => array(
 				'data_type' => 'text',
-				'title' => Loc::getMessage('REDIRECT_ENTITY_REDIRECT_FROM_FIELD'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_REDIRECT_FROM_FIELD')),
 				'editable' => true
 			),
 			'REDIRECT_TO' => array(
 				'data_type' => 'text',
-				'title' => Loc::getMessage('REDIRECT_ENTITY_REDIRECT_TO_FIELD'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_REDIRECT_TO_FIELD')),
 				'editable' => true
 			),
 			'IS_REGEXP' => array(
 				'data_type' => 'boolean',
 				'values' => array('N', 'Y'),
-				'title' => Loc::getMessage('REDIRECT_ENTITY_IS_REGEXP_FIELD'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_IS_REGEXP_FIELD')),
 				'editable' => true
 			),
 			'COUNT_REDIRECT' => array(
 				'data_type' => 'integer',
-				'title' => Loc::getMessage('REDIRECT_ENTITY_COUNT_REDIRECT'),
+				'title' => H2oRedirectTools::decodeUtf8(Loc::getMessage('REDIRECT_ENTITY_COUNT_REDIRECT')),
 				'editable' => false
 			)
 		);
